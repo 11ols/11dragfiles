@@ -7,10 +7,12 @@
 
 #ifdef WIN_VERSION
 #include "windows.h"
-#include "DragAndDrop.h"
+#include "Win/DragAndDrop.h"
 #include "shlobj.h"
 #else
 #import <Cocoa/Cocoa.h>
+#import <Carbon/Carbon.h>
+
 @interface DragSource : NSObject
 @end
 
