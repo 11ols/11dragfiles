@@ -64,7 +64,7 @@ int C74_EXPORT main(void)
 	MyDragDropInit(NULL);
     #endif
     
-	object_post(NULL, "11dragfiles 2021/06/12 11OLSEN.DE");
+	object_post(NULL, "11dragfiles 2022/01/17 11OLSEN.DE");
 	return 0;
 }
 

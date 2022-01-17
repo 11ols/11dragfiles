@@ -14,12 +14,17 @@ file(GLOB PROJECT_SRC
      	"*.h"
 	 "*.c"
      	"*.cpp"
-	IF(WIN32)
+)
+IF(WIN32)
+	file(GLOB PROJECT_SRC
+	"*.h"
+	 "*.c"
+     	"*.cpp"
 	"Win/*.h"
 	"Win/*.c"
      	"Win/*.cpp"
-	ENDIF(WIN32)
 )
+ENDIF(WIN32)
 
 add_library( 
 	${PROJECT_NAME} 
