@@ -29,7 +29,9 @@
 ////////////////////////// object struct
 typedef struct _dragfiles
 {
-	t_object					ob;			// the object itself (must be first)
+	t_object ob;	// the object itself (must be first)
+    void* out;      //outlet
+
 } t_dragfiles;
 
 ///////////////////////// function prototypes
@@ -39,7 +41,7 @@ void dragfiles_free(t_dragfiles *x);
 void dragfiles_assist(t_dragfiles *x, void *b, long m, long a, char *s);
 
 void dragfiles_drag(t_dragfiles *x, t_symbol *s, long argc, t_atom *argv);
-
+void dragfiles_dragend(t_dragfiles* x, t_symbol* s, long argc, t_atom* argv);
 //////////////////////// global class pointer variable
 void *dragfiles_class;
 
@@ -64,7 +66,7 @@ int C74_EXPORT main(void)
 	MyDragDropInit(NULL);
     #endif
     
-	object_post(NULL, "11dragfiles 2022/01/17 11OLSEN.DE");
+	object_post(NULL, "11dragfiles 2022/01/18 11OLSEN.DE");
 	return 0;
 }
 
@@ -179,6 +181,8 @@ void dragfiles_drag(t_dragfiles *x, t_symbol *s, long argc, t_atom *argv)
 			/* Free the source for the dragging now, as well as the two handles. */
 			FreeMyDropSource(pSrc);
 			GlobalFree(hData[0]);
+
+            defer_low(x, (method)dragfiles_dragend, NULL, 0, NULL);
 		}
 		else
 		{
@@ -314,6 +318,7 @@ void dragfiles_drag(t_dragfiles *x, t_symbol *s, long argc, t_atom *argv)
                             slideBack:NO];
                     
                     [paths release];
+                    defer_low(x, (method)dragfiles_dragend, NULL, 0, NULL);
                     return; //success
                 }
                 else
@@ -341,6 +346,7 @@ void dragfiles_drag(t_dragfiles *x, t_symbol *s, long argc, t_atom *argv)
                         slideBack:NO];
                 
                 [paths release];
+                defer_low(x, (method)dragfiles_dragend, NULL, 0, NULL);
                 return; //success
             }
         }
@@ -353,13 +359,15 @@ void dragfiles_drag(t_dragfiles *x, t_symbol *s, long argc, t_atom *argv)
         
     }
 }
-     
-
-
+ 
 
 #endif
 
 
+void dragfiles_dragend(t_dragfiles* x, t_symbol* s, long argc, t_atom* argv)
+{
+    outlet_bang(x->out);
+}
 
 void dragfiles_assist(t_dragfiles *x, void *b, long m, long a, char *s)
 {
@@ -367,10 +375,16 @@ void dragfiles_assist(t_dragfiles *x, void *b, long m, long a, char *s)
 	{ 	// Inlets
 		switch (a)
 		{
-		case 0: strcpy(s, ""); break;
+		case 0: strcpy(s, "drag + (file paths)"); break;
 		case 1: strcpy(s, ""); break;
 		}
 	}
+    else if (m == 2) { // Outlets
+        if (a == 0)
+            strcpy(s, "bang on drag end");
+        else
+            strcpy(s, "?");
+    }
 }
 
 
@@ -385,7 +399,8 @@ void *dragfiles_new(t_symbol *s, long argc, t_atom *argv)
 	t_dragfiles *x = NULL;
 
     x = (t_dragfiles *)object_alloc(dragfiles_class);
-	
+    x->out = bangout((t_object*)x);
+
 	return (x);
 }
 
