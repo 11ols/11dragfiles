@@ -46,7 +46,7 @@ void dragfiles_dragend(t_dragfiles* x, t_symbol* s, long argc, t_atom* argv);
 void *dragfiles_class;
 
 
-int C74_EXPORT main(void)
+void ext_main(void *r)
 {
 	t_class *c;
     common_symbols_init();
@@ -66,7 +66,7 @@ int C74_EXPORT main(void)
 	MyDragDropInit(NULL);
     #endif
     
-	object_post(NULL, "11dragfiles 2022/01/18 11OLSEN.DE");
+	object_post(NULL, "11dragfiles 2022/01/30 11OLSEN.DE");
 	return 0;
 }
 
