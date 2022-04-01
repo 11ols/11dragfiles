@@ -66,8 +66,8 @@ void ext_main(void *r)
 	MyDragDropInit(NULL);
     #endif
     
-	object_post(NULL, "11dragfiles 2022/01/30 11OLSEN.DE");
-	return 0;
+	object_post(NULL, "11dragfiles 2022/04/01 11OLSEN.DE");
+	return;
 }
 
 
@@ -212,7 +212,7 @@ void dragfiles_drag(t_dragfiles *x, t_symbol *s, long argc, t_atom *argv)
     {
         if (atom_gettype(argv + i) != A_SYM)
         {
-            object_error((t_object *)s, "wrong input, please use a list of file path symbols");
+            object_error((t_object *)x, "wrong input, please use a list of file path symbols");
             return;
         }
     }
@@ -242,7 +242,7 @@ void dragfiles_drag(t_dragfiles *x, t_symbol *s, long argc, t_atom *argv)
         
             if(![[NSFileManager defaultManager] fileExistsAtPath:path])
             {
-                object_error((t_object *)s, "The file “%s” does not exist. Ignoring.\n", [path UTF8String]);
+                object_error((t_object *)x, "The file “%s” does not exist. Ignoring.\n", [path UTF8String]);
                 continue;
             }
         
@@ -322,7 +322,7 @@ void dragfiles_drag(t_dragfiles *x, t_symbol *s, long argc, t_atom *argv)
                     return; //success
                 }
                 else
-                    object_error((t_object *)s, "error getting nativewindow");
+                    object_error((t_object *)x, "error getting nativewindow");
 
             }
             else
@@ -351,7 +351,7 @@ void dragfiles_drag(t_dragfiles *x, t_symbol *s, long argc, t_atom *argv)
             }
         }
         else
-            object_error((t_object *)s, "No valid file paths given.");
+            object_error((t_object *)x, "No valid file paths given.");
         
         
         [paths release];
